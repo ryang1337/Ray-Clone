@@ -10,6 +10,7 @@
 #include <utility>
 
 #include "common_types.h"
+#include "serializer.h"
 
 namespace rayclone {
 
@@ -36,17 +37,13 @@ public:
     std::cout << res << "\n";
 
     // pack result
-    msgpack::sbuffer buf;
-    msgpack::pack(buf, res);
-    return buf;
+    return Serializer::Serialize<ReturnType>(res);
   }
 
 private:
   template <typename ArgType>
   static ArgType ParseArg(const msgpack::sbuffer &arg) {
-    ArgType res;
-    msgpack::unpack(arg.data(), arg.size()).get().convert(res);
-    return res;
+    return Serializer::Deserialize<ArgType>(arg);
   }
 
   template <typename ArgListType, size_t... I>
