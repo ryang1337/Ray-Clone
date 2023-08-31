@@ -1,3 +1,5 @@
+#pragma once
+
 #include <boost/callable_traits.hpp>
 #include <functional>
 #include <iostream>
