@@ -11,6 +11,9 @@
 
 namespace rayclone {
 
+/*
+ * Type erased wrapper around all user defined functions
+ */
 template <typename Function> class Applicator {
 public:
   static msgpack::sbuffer Apply(Function f, const ArgsBufferList &args_list) {
