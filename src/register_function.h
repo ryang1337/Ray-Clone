@@ -70,14 +70,28 @@ public:
     return fm;
   }
 
-  template <typename Func>
-  void RegisterRemoteFunction(std::string f_name, Func f) {
-    std::string func_name = f_name;
+  template <typename Function>
+  int RegisterRemoteFunction(std::string func_name, Function f) {
     std::string addr = GetAddress(f);
-    function_ptr_map.emplace(addr, f_name);
+    function_ptr_map.emplace(addr, func_name);
     remote_function_map.emplace(func_name,
-                                std::bind(Applicator<Func>::Apply, std::move(f),
-                                          std::placeholders::_1));
+                                std::bind(Applicator<Function>::Apply,
+                                          std::move(f), std::placeholders::_1));
+    return 0;
+  }
+
+  std::unordered_map<std::string, RemoteFunction> GetRemoteFunctions() {
+    return remote_function_map;
+  }
+
+  RemoteFunction &GetRemoteFunction(std::string func_name) {
+    return remote_function_map[func_name];
+  }
+
+  template <typename Function>
+  RemoteFunction &FuncPtrToRemoteFunction(Function f) {
+    std::string func_name = function_ptr_map[GetAddress(f)];
+    return remote_function_map[func_name];
   }
 
 private:
@@ -101,6 +115,10 @@ private:
   }
 };
 
+#define ANONYMOUS_VARIABLE(str) str##__LINE__
+
 #define REGISTER_REMOTE_FUNCTION(func)                                         \
-  rayclone::FunctionManager::Instance().RegisterRemoteFunction(#func, func);
+  inline auto ANONYMOUS_VARIABLE(var) =                                        \
+      rayclone::FunctionManager::Instance().RegisterRemoteFunction(#func,      \
+                                                                   func);
 } // namespace rayclone
