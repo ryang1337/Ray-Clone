@@ -94,6 +94,11 @@ public:
     return remote_function_map[func_name];
   }
 
+  template <typename Function>
+  std::string FuncPtrToFuncName(Function f){
+    return function_ptr_map[GetAddress(f)];
+  }
+
 private:
   std::unordered_map<std::string, RemoteFunction> remote_function_map;
   std::unordered_map<std::string, std::string> function_ptr_map;
