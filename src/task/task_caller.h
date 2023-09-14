@@ -23,14 +23,14 @@ template <typename Func> class TaskCaller {
 public:
   TaskCaller(Func f) {
     func_name =
-        rayclone::FunctionManager::Instance().FuncPtrToRemoteFunction(f);
+        FunctionManager::Instance().FuncPtrToRemoteFunction(f);
   }
 
   template <typename... Args>
   ObjectRef<boost::callable_traits::return_type_t<Func>>
   Remote(Args &&...args) {
     ObjectRef<boost::callable_traits::return_type_t<Func>> ob_ref;
-    rayclone::FutureStore::Instance().AddFuture(ob_ref);
+    FutureStore::Instance().AddFuture(ob_ref);
   }
 
 private:
