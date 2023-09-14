@@ -120,7 +120,9 @@ private:
   }
 };
 
-#define ANONYMOUS_VARIABLE(str) str##__LINE__
+#define CONCAT(s1, s2) s1##s2
+#define CONCAT2(s1, s2) CONCAT(s1, s2)
+#define ANONYMOUS_VARIABLE(str) CONCAT2(str, __LINE__)
 
 #define REGISTER_REMOTE_FUNCTION(func)                                         \
   inline auto ANONYMOUS_VARIABLE(var) =                                        \
