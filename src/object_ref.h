@@ -16,6 +16,10 @@ public:
     tag = rhs.tag;
   }
 
+  const boost::uuids::uuid GetTag() const{
+    return tag;
+  }
+
 private:
   boost::uuids::uuid tag;
 };
