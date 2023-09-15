@@ -9,7 +9,5 @@ public:
     TaskCaller<Func> tc(f);
     return tc;
   }
-
-private:
 };
 } // namespace rayclone
