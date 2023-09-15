@@ -12,7 +12,7 @@ function(create_test file_name)
   target_link_libraries(${file_name} GTest::gtest_main)
 endfunction()
 
-set(file_names register_function serializer)
+set(file_names register_function serializer future_store)
 
 foreach(file_name IN LISTS file_names)
   create_test(test_${file_name})

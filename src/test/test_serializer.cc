@@ -1,8 +1,7 @@
 #include <gtest/gtest.h>
 #include <src/serializer.h>
-#include <msgpack.hpp>
 
-TEST(SerializerTest, SerializeIntTest){
+TEST(SerializerTest, SerializeIntTest) {
   msgpack::sbuffer buf = rayclone::Serializer::Serialize(5);
   int val = 5;
   msgpack::sbuffer expected;
@@ -10,7 +9,7 @@ TEST(SerializerTest, SerializeIntTest){
   EXPECT_EQ(*buf.data(), *expected.data());
 }
 
-TEST(SerializerTest, SerializeStringTest){
+TEST(SerializerTest, SerializeStringTest) {
   msgpack::sbuffer buf = rayclone::Serializer::Serialize("test");
   std::string val = "test";
   msgpack::sbuffer expected;
@@ -18,14 +17,14 @@ TEST(SerializerTest, SerializeStringTest){
   EXPECT_EQ(*buf.data(), *expected.data());
 }
 
-TEST(SerializerTest, DeserializeIntTest){
+TEST(SerializerTest, DeserializeIntTest) {
   msgpack::sbuffer packed;
   msgpack::pack(packed, 5);
   int unpacked = rayclone::Serializer::Deserialize<int>(packed);
   EXPECT_EQ(unpacked, 5);
 }
 
-TEST(SerializerTest, DeserializeStringTest){
+TEST(SerializerTest, DeserializeStringTest) {
   msgpack::sbuffer packed;
   msgpack::pack(packed, "test");
   std::string unpacked = rayclone::Serializer::Deserialize<std::string>(packed);
