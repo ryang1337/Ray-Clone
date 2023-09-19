@@ -1,7 +1,11 @@
 #pragma once
+
 #include <src/common_types.h>
 #include <src/serializer.h>
+
+#include <memory>
 #include <string>
+#include <vector>
 
 namespace rayclone {
 
@@ -9,14 +13,12 @@ class TaskSpec {
 public:
   template <typename... Args>
   TaskSpec(std::string f, Args... args) : func_name(f) {
-    (args_list.push_back(Serializer::Serialize(args)), ...);
+    (args_list.emplace_back(
+         std::make_unique<ArgsBuffer>(Serializer::Serialize(args))),
+     ...);
   };
 
-  std::string GetFuncName() const { return func_name; }
-  ArgsBufferList GetArgs() const { return args_list; }
-
-private:
   std::string func_name;
-  ArgsBufferList args_list;
+  std::vector<std::unique_ptr<ArgsBuffer>> args_list;
 };
 } // namespace rayclone
