@@ -94,8 +94,7 @@ public:
     return remote_function_map[func_name];
   }
 
-  template <typename Function>
-  std::string FuncPtrToFuncName(Function f){
+  template <typename Function> std::string FuncPtrToFuncName(Function f) {
     return function_ptr_map[GetAddress(f)];
   }
 

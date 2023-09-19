@@ -1,16 +1,16 @@
 syntax = "proto3";
 
-package rayclone;
+package raycloneRPC;
 
-service RemoteRPC{
-  rpc RayRemote(RemoteRequest) returns (RemoteResponse){}
+service RemoteRPC {
+  rpc RayRemote(RemoteRequest) returns (RemoteResponse) {}
 }
 
-message RemoteRequest{
+message RemoteRequest {
   string function_name = 1;
   repeated bytes function_args = 2;
 }
 
-message RemoteResponse{
+message RemoteResponse {
   bytes response = 1; // msgpack buffer containing the response
 }
