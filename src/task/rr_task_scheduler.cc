@@ -13,9 +13,7 @@ RoundRobinTaskScheduler::ScheduleTask(TaskSpec task_spec) {
 
   int proc_num = next();
 
-  // client_->SubmitTask(task_spec, task_promise, proc_num);
-
-  // TODO add task_submitter logic
+  client_->SubmitTask(task_spec, task_promise, proc_num);
 
   return task_future;
 }

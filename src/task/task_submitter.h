@@ -22,41 +22,51 @@ namespace rayclone {
 
 class TaskSubmitter {
 public:
-  template <class Iterator> class RoundRobin {
-  public:
-    RoundRobin(Iterator begin, std::size_t size) : begin(begin), size(size) {}
+  TaskSubmitter();
 
-    decltype(auto) next() {
-      const auto cur = current.fetch_add(1, std::memory_order_relaxed);
-      const auto pos = cur % size;
-      return *std::next(begin, pos);
-    }
+  virtual ~TaskSubmitter() = default;
 
-  private:
-    Iterator begin;
-    std::size_t size;
-    std::atomic_size_t current{};
-  };
+  virtual void SubmitTask(const TaskSpec &task_spec,
+                          std::promise<msgpack::sbuffer> &task_promise,
+                          int proc_num);
 
+private:
   struct GuardedGrpcContext {
     agrpc::GrpcContext context;
     asio::executor_work_guard<agrpc::GrpcContext::executor_type> guard{
         context.get_executor()};
   };
 
-  TaskSubmitter();
+  class RoundRobin {
+  public:
+    RoundRobin() = default;
 
-  virtual ~TaskSubmitter() = default;
+    RoundRobin(std::vector<std::unique_ptr<GuardedGrpcContext>>::iterator begin,
+               std::size_t size)
+        : begin(begin), size(size) {}
 
-  virtual void SubmitTask(TaskSpec task_spec,
-                          std::promise<msgpack::sbuffer> task_promise,
-                          int proc_num);
+    decltype(auto) next() {
+      std::size_t cur = current + 1;
+      current = cur % size;
+      return *std::next(begin, current);
+    }
 
-private:
+  private:
+    std::vector<std::unique_ptr<GuardedGrpcContext>>::iterator begin;
+    std::size_t size;
+    std::size_t current;
+  };
+
+  asio::awaitable<void>
+  MakeRequest(agrpc::GrpcContext &grpc_context,
+              raycloneRPC::RemoteRPC::Stub &stub, const TaskSpec &task_spec,
+              std::promise<msgpack::sbuffer> &task_promise);
+
   std::size_t thread_count;
   std::vector<std::thread> threads;
   std::vector<raycloneRPC::RemoteRPC::Stub> stubs;
   std::vector<std::unique_ptr<GuardedGrpcContext>> grpc_contexts;
+  RoundRobin rr;
   std::vector<std::string> hosts = {"localhost:50051", "localhost:50052",
                                     "localhost:50053"};
 };
