@@ -12,7 +12,7 @@ namespace rayclone {
 
 class TaskScheduler {
 public:
-  TaskScheduler(std::unique_ptr<TaskSubmitter> client)
+  TaskScheduler(std::unique_ptr<TaskSubmitter> &&client)
       : client_(std::move(client)){};
 
   virtual ~TaskScheduler() = default;

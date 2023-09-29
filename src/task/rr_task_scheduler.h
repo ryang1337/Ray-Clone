@@ -10,7 +10,7 @@ namespace rayclone {
 class RoundRobinTaskScheduler : public TaskScheduler {
 public:
   RoundRobinTaskScheduler(std::size_t procs,
-                          std::unique_ptr<TaskSubmitter> client);
+                          std::unique_ptr<TaskSubmitter> &&client);
 
   std::future<msgpack::sbuffer> ScheduleTask(TaskSpec task_spec);
 

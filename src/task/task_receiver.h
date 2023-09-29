@@ -18,7 +18,7 @@ class TaskReceiver {
 public:
   TaskReceiver() = default;
 
-  TaskReceiver(std::unique_ptr<TaskExecutor> exec)
+  TaskReceiver(std::unique_ptr<TaskExecutor> &&exec)
       : executor(std::move(exec)) {}
 
   virtual ~TaskReceiver() = default;

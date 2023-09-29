@@ -3,7 +3,7 @@
 namespace rayclone {
 
 RoundRobinTaskScheduler::RoundRobinTaskScheduler(
-    std::size_t procs, std::unique_ptr<TaskSubmitter> client)
+    std::size_t procs, std::unique_ptr<TaskSubmitter> &&client)
     : TaskScheduler(std::move(client)), num_procs(procs), current(0) {}
 
 std::future<msgpack::sbuffer>
