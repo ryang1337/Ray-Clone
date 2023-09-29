@@ -4,7 +4,7 @@
 
 namespace rayclone {
 void RayRuntime::Init() {
-  RayConfig config = {.grpcPort = "", .is_worker = false};
+  RayConfig config = {.grpcPort = "50051", .is_worker = false};
   Init(config);
 }
 
